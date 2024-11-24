@@ -1,15 +1,15 @@
 <template>
-  <LoginForm />
+  <LoginSignUp />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import LoginForm from "./components/LoginForm.vue";
+import LoginSignUp from "@/components/LoginSignUp.vue";
 
 export default defineComponent({
   name: "App",
   components: {
-    LoginForm,
+    LoginSignUp,
   },
 });
 </script>
