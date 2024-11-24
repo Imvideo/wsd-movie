@@ -7,13 +7,13 @@
     ></div>
 
     <!-- 카드 컨테이너 -->
-    <div class="relative w-full max-w-md h-[400px] perspective">
+    <div class="relative w-full max-w-md h-[450px]">
       <!-- 로그인 카드 -->
       <div
-          class="absolute w-full h-full transition-transform duration-700 ease-in-out transform-style-3d"
+          class="absolute w-full h-full transition-transform duration-700 ease-in-out"
           :class="{
-          'translate-x-0 z-10': !isSignUp,
-          '-translate-x-full z-0': isSignUp,
+          'z-10 translate-y-0': !isSignUp,
+          'z-0 translate-y-[20px]': isSignUp,
         }"
       >
         <div class="p-6 bg-white rounded-lg shadow-lg h-full flex flex-col justify-center">
@@ -55,13 +55,13 @@
 
       <!-- 회원가입 카드 -->
       <div
-          class="absolute w-full h-full transition-transform duration-700 ease-in-out transform-style-3d"
+          class="absolute w-full h-full transition-transform duration-700 ease-in-out"
           :class="{
-          'translate-x-0 z-10': isSignUp,
-          'translate-x-full z-0': !isSignUp,
+          'z-10 translate-y-0': isSignUp,
+          'z-0 translate-y-[20px]': !isSignUp,
         }"
       >
-        <div class="p-6 bg-blue-500 rounded-lg shadow-lg h-full flex flex-col justify-center text-white">
+        <div class="p-6 bg-blue-500 text-white rounded-lg shadow-lg h-full flex flex-col justify-center">
           <h2 class="text-xl font-bold mb-4 text-center">Sign up</h2>
           <form @submit.prevent="handleSignUp" class="w-full flex flex-col gap-3">
             <input
@@ -151,20 +151,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* 3D 스타일 */
-.perspective {
-  perspective: 1000px;
-}
-
-.transform-style-3d {
-  transform-style: preserve-3d;
-}
-
-.translate-x-full {
-  transform: translateX(100%);
-}
-
-.-translate-x-full {
-  transform: translateX(-100%);
+/* 카드의 기본 위치 설정 */
+.translate-y-[20px] {
+  transform: translateY(20px);
 }
 </style>
