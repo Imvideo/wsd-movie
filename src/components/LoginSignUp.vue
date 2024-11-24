@@ -7,121 +7,119 @@
     ></div>
 
     <!-- 카드 컨테이너 -->
-    <div class="relative w-full max-w-md">
+    <div class="relative w-full max-w-md h-[500px]">
+      <!-- 로그인 카드 -->
       <div
-          class="perspective"
+          class="absolute w-full h-full bg-white rounded-lg shadow-lg p-8 transition-all duration-700"
+          :class="{
+          'translate-y-0 z-10 scale-100': !isSignUp,
+          '-translate-y-[20px] scale-95 z-0': isSignUp,
+        }"
       >
-        <!-- 회전 카드 -->
-        <div
-            class="transform-style-3d transition-transform duration-700"
-            :class="{ 'rotate-y-180': isSignUp }"
-        >
-          <!-- 로그인 카드 -->
-          <div class="absolute backface-hidden w-full">
-            <div class="bg-white rounded-lg shadow-lg p-8">
-              <h2 class="text-center text-2xl font-bold text-gray-800 mb-6">Sign in</h2>
-              <form @submit.prevent="handleLogin">
-                <div class="mb-4">
-                  <input
-                      v-model="username"
-                      type="text"
-                      placeholder="Username or Email"
-                      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                      required
-                  />
-                </div>
-                <div class="mb-6">
-                  <input
-                      v-model="password"
-                      type="password"
-                      placeholder="Password"
-                      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                      required
-                  />
-                </div>
-                <button
-                    type="submit"
-                    class="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-                >
-                  LOGIN
-                </button>
-              </form>
-              <p class="mt-6 text-center text-sm text-gray-600">
-                Don't have an account?
-                <a
-                    href="#"
-                    class="text-blue-500 hover:underline font-medium"
-                    @click.prevent="toggleCard"
-                >
-                  Sign up
-                </a>
-              </p>
-            </div>
+        <h2 class="text-center text-2xl font-bold text-gray-800 mb-6">Sign in</h2>
+        <form @submit.prevent="handleLogin">
+          <div class="mb-4">
+            <input
+                v-model="username"
+                type="text"
+                placeholder="Username or Email"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+            />
           </div>
+          <div class="mb-6">
+            <input
+                v-model="password"
+                type="password"
+                placeholder="Password"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+            />
+          </div>
+          <button
+              type="submit"
+              class="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+          >
+            LOGIN
+          </button>
+        </form>
+        <p class="mt-6 text-center text-sm text-gray-600">
+          Don't have an account?
+          <a
+              href="#"
+              class="text-blue-500 hover:underline font-medium"
+              @click.prevent="toggleCard"
+          >
+            Sign up
+          </a>
+        </p>
+      </div>
 
-          <!-- 회원가입 카드 -->
-          <div class="absolute backface-hidden w-full rotate-y-180">
-            <div class="bg-white rounded-lg shadow-lg p-8">
-              <h2 class="text-center text-2xl font-bold text-gray-800 mb-6">Sign up</h2>
-              <form @submit.prevent="handleSignUp">
-                <div class="mb-4">
-                  <input
-                      v-model="email"
-                      type="email"
-                      placeholder="Email"
-                      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                      required
-                  />
-                </div>
-                <div class="mb-4">
-                  <input
-                      v-model="password"
-                      type="password"
-                      placeholder="Password"
-                      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                      required
-                  />
-                </div>
-                <div class="mb-6">
-                  <input
-                      v-model="confirmPassword"
-                      type="password"
-                      placeholder="Confirm Password"
-                      class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                      required
-                  />
-                </div>
-                <div class="flex items-center mb-6">
-                  <input
-                      type="checkbox"
-                      id="terms"
-                      class="form-checkbox text-blue-500"
-                      required
-                  />
-                  <label for="terms" class="ml-2 text-sm text-gray-600">
-                    I have read Terms and Conditions
-                  </label>
-                </div>
-                <button
-                    type="submit"
-                    class="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-                >
-                  REGISTER
-                </button>
-              </form>
-              <p class="mt-6 text-center text-sm text-gray-600">
-                Already have an account?
-                <a
-                    href="#"
-                    class="text-blue-500 hover:underline font-medium"
-                    @click.prevent="toggleCard"
-                >
-                  Sign in
-                </a>
-              </p>
-            </div>
+      <!-- 회원가입 카드 -->
+      <div
+          class="absolute w-full h-full bg-white rounded-lg shadow-lg p-8 transition-all duration-700"
+          :class="{
+          'translate-y-0 z-10 scale-100': isSignUp,
+          'translate-y-[20px] scale-95 z-0': !isSignUp,
+        }"
+      >
+        <h2 class="text-center text-2xl font-bold text-gray-800 mb-6">Sign up</h2>
+        <form @submit.prevent="handleSignUp">
+          <div class="mb-4">
+            <input
+                v-model="email"
+                type="email"
+                placeholder="Email"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+            />
           </div>
-        </div>
+          <div class="mb-4">
+            <input
+                v-model="password"
+                type="password"
+                placeholder="Password"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+            />
+          </div>
+          <div class="mb-6">
+            <input
+                v-model="confirmPassword"
+                type="password"
+                placeholder="Confirm Password"
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+            />
+          </div>
+          <div class="flex items-center mb-6">
+            <input
+                type="checkbox"
+                id="terms"
+                class="form-checkbox text-blue-500"
+                required
+            />
+            <label for="terms" class="ml-2 text-sm text-gray-600">
+              I have read Terms and Conditions
+            </label>
+          </div>
+          <button
+              type="submit"
+              class="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+          >
+            REGISTER
+          </button>
+        </form>
+        <p class="mt-6 text-center text-sm text-gray-600">
+          Already have an account?
+          <a
+              href="#"
+              class="text-blue-500 hover:underline font-medium"
+              @click.prevent="toggleCard"
+          >
+            Sign in
+          </a>
+        </p>
       </div>
     </div>
   </div>
@@ -170,22 +168,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.perspective {
-  perspective: 1000px;
-}
-
-.transform-style-3d {
-  transform-style: preserve-3d;
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.backface-hidden {
-  backface-visibility: hidden;
-}
-
-.rotate-y-180 {
-  transform: rotateY(180deg);
-}
+/* 카드 전환 관련 스타일 */
 </style>
