@@ -12,11 +12,11 @@
       <div
           class="absolute w-full h-full transition-transform duration-700 ease-in-out"
           :class="{
-          'z-10 translate-y-0': !isSignUp,
-          'z-0 translate-y-[20px]': isSignUp,
+          'z-10 translate-y-0 bg-white text-black': !isSignUp,
+          'z-0 translate-y-[20px] bg-blue-500 text-white': isSignUp,
         }"
       >
-        <div class="p-6 bg-white rounded-lg shadow-lg h-full flex flex-col justify-center">
+        <div class="p-6 rounded-lg shadow-lg h-full flex flex-col justify-center">
           <h2 class="text-xl font-bold mb-4 text-center">Sign in</h2>
           <form @submit.prevent="handleLogin" class="w-full flex flex-col gap-3">
             <input
@@ -57,37 +57,37 @@
       <div
           class="absolute w-full h-full transition-transform duration-700 ease-in-out"
           :class="{
-          'z-10 translate-y-0': isSignUp,
-          'z-0 translate-y-[20px]': !isSignUp,
+          'z-10 translate-y-0 bg-white text-black': isSignUp,
+          'z-0 translate-y-[20px] bg-blue-500 text-white': !isSignUp,
         }"
       >
-        <div class="p-6 bg-blue-500 text-white rounded-lg shadow-lg h-full flex flex-col justify-center">
+        <div class="p-6 rounded-lg shadow-lg h-full flex flex-col justify-center">
           <h2 class="text-xl font-bold mb-4 text-center">Sign up</h2>
           <form @submit.prevent="handleSignUp" class="w-full flex flex-col gap-3">
             <input
                 v-model="email"
                 type="email"
                 placeholder="Email"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-white focus:outline-none"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 required
             />
             <input
                 v-model="password"
                 type="password"
                 placeholder="Password"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-white focus:outline-none"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 required
             />
             <input
                 v-model="confirmPassword"
                 type="password"
                 placeholder="Confirm Password"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-white focus:outline-none"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 required
             />
             <button
                 type="submit"
-                class="w-full py-2 px-4 bg-white text-blue-500 font-semibold rounded-md shadow-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
+                class="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
             >
               REGISTER
             </button>
@@ -96,7 +96,7 @@
             Already have an account?
             <a
                 href="#"
-                class="text-white hover:underline font-medium"
+                class="text-blue-500 hover:underline font-medium"
                 @click.prevent="toggleCard"
             >
               Sign in
