@@ -12,12 +12,12 @@
       <div
           class="absolute w-full h-full transition-transform duration-700 ease-in-out transform-style-3d"
           :class="{
-          'translate-x-0 z-10 scale-100': !isSignUp,
-          '-translate-x-[120%] -rotate-y-15 z-0 scale-90 bg-blue-500 text-white': isSignUp,
+          'translate-x-0 z-10': !isSignUp,
+          '-translate-x-full z-0': isSignUp,
         }"
       >
-        <div class="p-6 h-full flex flex-col justify-center items-center">
-          <h2 class="text-xl font-bold mb-4">Sign in</h2>
+        <div class="p-6 bg-white rounded-lg shadow-lg h-full flex flex-col justify-center">
+          <h2 class="text-xl font-bold mb-4 text-center">Sign in</h2>
           <form @submit.prevent="handleLogin" class="w-full flex flex-col gap-3">
             <input
                 v-model="username"
@@ -40,7 +40,7 @@
               LOGIN
             </button>
           </form>
-          <p class="mt-4 text-sm">
+          <p class="mt-4 text-sm text-center">
             Don't have an account?
             <a
                 href="#"
@@ -57,12 +57,12 @@
       <div
           class="absolute w-full h-full transition-transform duration-700 ease-in-out transform-style-3d"
           :class="{
-          'translate-x-0 z-10 scale-100': isSignUp,
-          'translate-x-[120%] rotate-y-15 z-0 scale-90 bg-blue-500 text-white': !isSignUp,
+          'translate-x-0 z-10': isSignUp,
+          'translate-x-full z-0': !isSignUp,
         }"
       >
-        <div class="p-6 h-full flex flex-col justify-center items-center">
-          <h2 class="text-xl font-bold mb-4">Sign up</h2>
+        <div class="p-6 bg-blue-500 rounded-lg shadow-lg h-full flex flex-col justify-center text-white">
+          <h2 class="text-xl font-bold mb-4 text-center">Sign up</h2>
           <form @submit.prevent="handleSignUp" class="w-full flex flex-col gap-3">
             <input
                 v-model="email"
@@ -92,7 +92,7 @@
               REGISTER
             </button>
           </form>
-          <p class="mt-4 text-sm">
+          <p class="mt-4 text-sm text-center">
             Already have an account?
             <a
                 href="#"
@@ -160,15 +160,11 @@ export default defineComponent({
   transform-style: preserve-3d;
 }
 
-.bg-blue-500.text-white .focus:ring-white {
-  focus-ring-color: white;
+.translate-x-full {
+  transform: translateX(100%);
 }
 
-.rotate-y-15 {
-  transform: rotateY(15deg);
-}
-
-.translate-x-[120%] {
-  transform: translateX(translate(1) rotate);
+.-translate-x-full {
+  transform: translateX(-100%);
 }
 </style>
