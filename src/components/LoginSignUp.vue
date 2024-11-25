@@ -12,8 +12,8 @@
       <div
           class="absolute w-full transition-transform duration-700 ease-in-out rounded-lg shadow-lg"
           :class="{
-          'z-10 translate-y-[-30px] bg-white text-black h-[400px]': !isSignUp,
-          'z-0 translate-y-[40px] bg-blue-500 text-white h-[450px]': isSignUp,
+          'z-10 translate-y-minus-30 bg-white text-black h-96': !isSignUp,
+          'z-0 translate-y-40 bg-blue-500 text-white h-[450px]': isSignUp,
         }"
       >
         <div class="p-6 flex flex-col justify-between h-full">
@@ -51,7 +51,7 @@
             LOGIN
           </button>
         </div>
-        <!-- Sign up 문구 -->
+        <!-- "Don't have an account?" 문구 -->
         <p
             v-if="!isSignUp"
             class="mt-4 text-center text-sm text-white bg-blue-500 py-2 rounded-b-lg"
@@ -71,8 +71,8 @@
       <div
           class="absolute w-full transition-transform duration-700 ease-in-out rounded-lg shadow-lg"
           :class="{
-          'z-10 translate-y-[-30px] bg-white text-black h-[400px]': isSignUp,
-          'z-0 translate-y-[40px] bg-blue-500 text-white h-[450px]': !isSignUp,
+          'z-10 translate-y-minus-30 bg-white text-black h-96': isSignUp,
+          'z-0 translate-y-40 bg-blue-500 text-white h-[450px]': !isSignUp,
         }"
       >
         <div class="p-6 flex flex-col justify-between h-full">
@@ -110,7 +110,7 @@
             SIGN UP
           </button>
         </div>
-        <!-- Sign in 문구 -->
+        <!-- "Already have an account?" 문구 -->
         <p
             v-if="isSignUp"
             class="mt-4 text-center text-sm text-white bg-blue-500 py-2 rounded-b-lg"
@@ -128,6 +128,7 @@
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
@@ -171,14 +172,13 @@ export default defineComponent({
 });
 </script>
 
-
 <style scoped>
 /* 카드 높이 및 위치 조정 */
-.translate-y-[-30px] {
+.translate-y-minus-30 {
   transform: translateY(-30px);
 }
 
-.translate-y-[40px] {
+.translate-y-40 {
   transform: translateY(40px);
 }
 </style>
