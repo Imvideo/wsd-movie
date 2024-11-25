@@ -12,8 +12,8 @@
       <div
           class="absolute w-full transition-transform duration-700 ease-in-out rounded-lg shadow-lg"
           :class="{
-          'z-10 translate-y-[-30px] bg-white text-black h-[350px]': !isSignUp,
-          'z-0 translate-y-[40px] bg-blue-500 text-white h-[400px]': isSignUp,
+          'z-10 translate-y-[-30px] bg-white text-black h-[400px]': !isSignUp,
+          'z-0 translate-y-[40px] bg-blue-500 text-white h-[450px]': isSignUp,
         }"
       >
         <div class="p-6 flex flex-col justify-between h-full">
@@ -44,20 +44,35 @@
             </form>
           </div>
           <button
+              v-if="!isSignUp"
               class="mt-6 w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
               @click.prevent="toggleCard"
           >
             LOGIN
           </button>
         </div>
+        <!-- Sign up 문구 -->
+        <p
+            v-if="!isSignUp"
+            class="mt-4 text-center text-sm text-white bg-blue-500 py-2 rounded-b-lg"
+        >
+          Don't have an account?
+          <a
+              href="#"
+              class="font-bold hover:underline"
+              @click.prevent="toggleCard"
+          >
+            Sign up
+          </a>
+        </p>
       </div>
 
       <!-- 회원가입 카드 -->
       <div
           class="absolute w-full transition-transform duration-700 ease-in-out rounded-lg shadow-lg"
           :class="{
-          'z-10 translate-y-[-30px] bg-white text-black h-[350px]': isSignUp,
-          'z-0 translate-y-[40px] bg-blue-500 text-white h-[400px]': !isSignUp,
+          'z-10 translate-y-[-30px] bg-white text-black h-[400px]': isSignUp,
+          'z-0 translate-y-[40px] bg-blue-500 text-white h-[450px]': !isSignUp,
         }"
       >
         <div class="p-6 flex flex-col justify-between h-full">
@@ -88,12 +103,27 @@
             </form>
           </div>
           <button
+              v-if="isSignUp"
               class="mt-6 w-full py-2 px-4 bg-white text-blue-500 font-semibold rounded-md shadow-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
               @click.prevent="toggleCard"
           >
-            Sign in
+            SIGN UP
           </button>
         </div>
+        <!-- Sign in 문구 -->
+        <p
+            v-if="isSignUp"
+            class="mt-4 text-center text-sm text-white bg-blue-500 py-2 rounded-b-lg"
+        >
+          Already have an account?
+          <a
+              href="#"
+              class="font-bold hover:underline"
+              @click.prevent="toggleCard"
+          >
+            Sign in
+          </a>
+        </p>
       </div>
     </div>
   </div>
@@ -140,6 +170,7 @@ export default defineComponent({
   },
 });
 </script>
+
 
 <style scoped>
 /* 카드 높이 및 위치 조정 */
