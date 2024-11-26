@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-900 text-white">
     <!-- Header -->
-    <header class="bg-black p-4 sticky top-0 z-10">
+    <header class="bg-black p-4 sticky top-0 z-50">
       <div class="flex justify-between items-center">
         <h1 class="text-lg font-bold">대세 콘텐츠</h1>
         <div class="flex space-x-4">
@@ -130,7 +130,7 @@ export default defineComponent({
         } else {
           currentMovies.value = response;
         }
-        totalPages.value = 10; // TMDB 기준으로 total_pages 사용 가능
+        totalPages.value = 10; // Example total pages, set this based on actual API response
       } catch (error) {
         console.error("Error fetching movies:", error);
       } finally {
@@ -147,8 +147,7 @@ export default defineComponent({
 
     const handleScroll = () => {
       if (viewMode.value !== "infinite") return;
-      const { scrollTop, clientHeight, scrollHeight } =
-          document.documentElement;
+      const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
       if (scrollTop + clientHeight >= scrollHeight - 10 && !loading.value) {
         changePage(currentPage.value + 1);
       }
