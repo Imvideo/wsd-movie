@@ -98,7 +98,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, watch, onMounted } from "vue";
 import { fetchGenres, fetchFilteredMovies } from "@/services/tmdbService";
 
 export default defineComponent({
@@ -126,6 +126,12 @@ export default defineComponent({
       }
       loading.value = true;
       try {
+        console.log(
+            "Loading movies with filters:",
+            selectedGenre.value,
+            selectedRating.value,
+            selectedSort.value
+        );
         const response = await fetchFilteredMovies({
           apiKey,
           page: currentPage.value,
@@ -170,6 +176,16 @@ export default defineComponent({
       }
     };
 
+    // Watchers for Filters
+    watch(
+        [selectedGenre, selectedRating, selectedSort],
+        () => {
+          currentPage.value = 1; // 필터 변경 시 페이지 초기화
+          loadMovies(); // 필터 변경 즉시 검색
+        },
+        { immediate: true } // 컴포넌트 로드 시 초기 실행
+    );
+
     onMounted(() => {
       loadMovies();
       loadGenres();
@@ -191,12 +207,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-button {
-  transition: background-color 0.3s;
-}
-button:hover {
-  background-color: #555;
-}
-</style>
