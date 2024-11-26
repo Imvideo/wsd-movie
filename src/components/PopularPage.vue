@@ -8,17 +8,17 @@
     <!-- Main Content -->
     <div class="p-4" v-else>
       <div class="flex justify-end mb-4 space-x-4">
-        <!-- Table View 버튼 (아이콘) -->
+        <!-- Table View 버튼 -->
         <button
-            @click="setViewMode('table')"
+            @click="switchToTableView"
             :class="viewMode === 'table' ? 'bg-blue-500 text-white' : 'bg-gray-700'"
             class="px-4 py-2 rounded-md flex items-center"
         >
           <font-awesome-icon icon="th-large" class="text-xl" />
         </button>
-        <!-- Infinite Scroll 버튼 (아이콘) -->
+        <!-- Infinite Scroll 버튼 -->
         <button
-            @click="setViewMode('infinite')"
+            @click="switchToInfiniteScroll"
             :class="viewMode === 'infinite' ? 'bg-blue-500 text-white' : 'bg-gray-700'"
             class="px-4 py-2 rounded-md flex items-center"
         >
@@ -110,7 +110,8 @@ export default defineComponent({
 
     const apiKey = localStorage.getItem("apiKey");
 
-    const getImageUrl = (path: string) => `https://image.tmdb.org/t/p/w500${path}`;
+    const getImageUrl = (path: string) =>
+        `https://image.tmdb.org/t/p/w500${path}`;
 
     const loadMovies = async (page: number) => {
       if (!apiKey) {
@@ -121,7 +122,7 @@ export default defineComponent({
       try {
         const response = await fetchPopularMovies(apiKey, page);
         if (viewMode.value === "infinite") {
-          movies.value = [...movies.value, ...response];
+          movies.value = [...movies.value, ...response]; // 이전 데이터를 유지하며 새 데이터를 추가
         } else {
           currentMovies.value = response;
         }
@@ -140,22 +141,28 @@ export default defineComponent({
       }
     };
 
+    const switchToTableView = async () => {
+      viewMode.value = "table";
+      currentPage.value = 1;
+      currentMovies.value = [];
+      await loadMovies(1);
+      scrollToTop();
+    };
+
+    const switchToInfiniteScroll = async () => {
+      viewMode.value = "infinite";
+      currentPage.value = 1;
+      movies.value = []; // 기존 데이터를 초기화
+      await loadMovies(1);
+      scrollToTop();
+    };
+
     const handleScroll = () => {
       if (viewMode.value !== "infinite") return;
 
       const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
       if (scrollTop + clientHeight >= scrollHeight - 10 && !loading.value) {
-        if (currentPage.value < totalPages.value) {
-          currentPage.value++;
-          loadMovies(currentPage.value);
-        }
-      }
-    };
-
-    const setViewMode = (mode: string) => {
-      viewMode.value = mode;
-      if (mode === "infinite" && movies.value.length === 0) {
-        loadMovies(currentPage.value);
+        changePage(currentPage.value + 1);
       }
     };
 
@@ -181,7 +188,8 @@ export default defineComponent({
       loading,
       getImageUrl,
       changePage,
-      setViewMode,
+      switchToTableView,
+      switchToInfiniteScroll,
       scrollToTop,
     };
   },
