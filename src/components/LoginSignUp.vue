@@ -161,7 +161,6 @@ export default defineComponent({
     const handleLogin = () => {
       if (password.value.trim()) {
         localStorage.setItem("apiKey", password.value);
-        alert("Login successful");
         router.push("/"); // 로그인 성공 후 홈페이지로 이동
       } else {
         errorMessage.value = "API key is required!";
@@ -177,7 +176,6 @@ export default defineComponent({
           "user",
           JSON.stringify({ email: email.value, password: password.value })
       );
-      alert("Sign up successful");
       toggleCard("signin");
     };
 
@@ -195,6 +193,7 @@ export default defineComponent({
   },
 });
 </script>
+
 
 <style scoped>
 .translate-y-minus-30 {
