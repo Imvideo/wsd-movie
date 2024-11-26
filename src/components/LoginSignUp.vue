@@ -138,25 +138,11 @@ export default defineComponent({
   name: "LoginSignUp",
   setup() {
     const router = useRouter(); // Vue Router 객체
-    const isSignUp = ref(false); // SignUp 상태
-    const username = ref(""); // 로그인용 Username or Email
-    const password = ref(""); // 로그인 및 회원가입용 Password
-    const email = ref(""); // 회원가입용 Email
-    const confirmPassword = ref(""); // 회원가입용 Confirm Password
-    const errorMessage = ref(""); // 에러 메시지 상태
-
-    const toggleCard = () => {
-      isSignUp.value = !isSignUp.value;
-      clearFields();
-      errorMessage.value = "";
-    };
-
-    const clearFields = () => {
-      username.value = "";
-      password.value = "";
-      email.value = "";
-      confirmPassword.value = "";
-    };
+    const username = ref("");
+    const password = ref("");
+    const email = ref("");
+    const confirmPassword = ref("");
+    const errorMessage = ref("");
 
     const handleLogin = () => {
       const storedUser = localStorage.getItem("user");
@@ -164,7 +150,7 @@ export default defineComponent({
         const user = JSON.parse(storedUser);
         if (user.email === username.value && user.password === password.value) {
           errorMessage.value = ""; // 에러 메시지 초기화
-          router.push("/"); // 루트 경로로 이동
+          router.push("/home"); // 로그인 성공 후 홈 페이지로 이동
         } else {
           errorMessage.value = "Incorrect username or password.";
         }
@@ -173,31 +159,19 @@ export default defineComponent({
       }
     };
 
-    const handleSignUp = () => {
-      if (password.value !== confirmPassword.value) {
-        alert("Passwords do not match!");
-        return;
-      }
-      const userData = { email: email.value, password: password.value };
-      localStorage.setItem("user", JSON.stringify(userData));
-      alert(`Registered with email: ${email.value}`);
-      clearFields();
-    };
-
     return {
-      isSignUp,
       username,
       password,
       email,
       confirmPassword,
       errorMessage,
-      toggleCard,
       handleLogin,
-      handleSignUp,
     };
   },
 });
 </script>
+
+
 
 
 <style scoped>
