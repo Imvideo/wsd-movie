@@ -99,18 +99,18 @@ export default defineComponent({
 </script>
 
 
-<style scoped>
-.overflow-x-auto {
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-}
+<!--<style scoped>-->
+<!--.overflow-x-auto {-->
+<!--  display: flex;-->
+<!--  overflow-x: auto;-->
+<!--  scroll-behavior: smooth;-->
+<!--}-->
 
-.overflow-x-auto::-webkit-scrollbar {
-  display: none; /* 스크롤바 숨기기 */
-}
+<!--.overflow-x-auto::-webkit-scrollbar {-->
+<!--  display: none; /* 스크롤바 숨기기 */-->
+<!--}-->
 
-.space-x-4 > * + * {
-  margin-left: 1rem;
-}
-</style>
+<!--.space-x-4 > * + * {-->
+<!--  margin-left: 1rem;-->
+<!--}-->
+<!--</style>-->

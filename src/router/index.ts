@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoginSignUp from "@/components/LoginSignUp.vue";
 import HomePage from "@/components/HomePage.vue";
+import PopularPage from "@/components/PopularPage.vue";
+import SearchPage from "@/components/SearchPage.vue";
+import WishList from "@/components/WishList.vue";
 
 const routes = [
     {
@@ -13,6 +16,21 @@ const routes = [
         name: "HomePage",
         component: HomePage,
         meta: { requiresAuth: true }, // 인증이 필요한 페이지
+    },
+    {
+        path: "/popular", // 로그인 페이지
+        name: "PopularPage",
+        component: PopularPage,
+    },
+    {
+        path: "/search", // 로그인 페이지
+        name: "SearchPage",
+        component: SearchPage,
+    },
+    {
+        path: "/wishlist", // 로그인 페이지
+        name: "WishList",
+        component: WishList,
     },
     {
         path: "/:pathMatch(.*)*", // 잘못된 경로 처리

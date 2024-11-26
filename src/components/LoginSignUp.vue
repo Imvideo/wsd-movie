@@ -13,7 +13,7 @@
           class="absolute w-full transition-transform duration-700 ease-in-out rounded-lg shadow-lg"
           :class="{
           'z-10 translate-y-minus-30 bg-white text-black h-96': !isSignUp,
-          'z-0 translate-y-40 bg-blue-500 text-white h-[450px]': isSignUp,
+          'z-0 translate-y-40 bg-blue-500 text-white h-96': isSignUp,
         }"
       >
         <div class="p-6 flex flex-col justify-between h-full">
@@ -52,16 +52,16 @@
             LOGIN
           </button>
         </div>
-        <!-- "Don't have an account?" 문구 -->
+        <!-- Sign up 문구 -->
         <p
             v-if="!isSignUp"
-            class="mt-4 text-center text-sm text-white bg-blue-500 py-2 rounded-b-lg"
+            class="text-center text-sm text-white bg-blue-500 py-2 rounded-b-lg"
         >
           Don't have an account?
           <a
               href="#"
-              class="font-bold hover:underline"
-              @click.prevent="toggleCard"
+              class="font-bold text-white hover:underline"
+              @click.prevent="toggleCard('signup')"
           >
             Sign up
           </a>
@@ -73,7 +73,7 @@
           class="absolute w-full transition-transform duration-700 ease-in-out rounded-lg shadow-lg"
           :class="{
           'z-10 translate-y-minus-30 bg-white text-black h-96': isSignUp,
-          'z-0 translate-y-40 bg-blue-500 text-white h-[450px]': !isSignUp,
+          'z-0 translate-y-40 bg-blue-500 text-white h-96': !isSignUp,
         }"
       >
         <div class="p-6 flex flex-col justify-between h-full">
@@ -105,22 +105,22 @@
           </div>
           <button
               v-if="isSignUp"
-              class="mt-6 w-full py-2 px-4 bg-white text-blue-500 font-semibold rounded-md shadow-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+              class="mt-6 w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
               @click.prevent="handleSignUp"
           >
             SIGN UP
           </button>
         </div>
-        <!-- "Already have an account?" 문구 -->
+        <!-- Sign in 문구 -->
         <p
             v-if="isSignUp"
-            class="mt-4 text-center text-sm text-white bg-blue-500 py-2 rounded-b-lg"
+            class="text-center text-sm text-white bg-blue-500 py-2 rounded-b-lg"
         >
           Already have an account?
           <a
               href="#"
-              class="font-bold hover:underline"
-              @click.prevent="toggleCard"
+              class="font-bold text-white hover:underline"
+              @click.prevent="toggleCard('signin')"
           >
             Sign in
           </a>
@@ -138,40 +138,65 @@ export default defineComponent({
   name: "LoginSignUp",
   setup() {
     const router = useRouter();
+    const isSignUp = ref(false);
     const username = ref("");
-    const password = ref(""); // TMDB API 키로 사용
+    const password = ref("");
     const email = ref("");
     const confirmPassword = ref("");
     const errorMessage = ref("");
 
+    const resetFields = () => {
+      username.value = "";
+      password.value = "";
+      email.value = "";
+      confirmPassword.value = "";
+      errorMessage.value = "";
+    };
+
+    const toggleCard = (type: string) => {
+      resetFields();
+      isSignUp.value = type === "signup";
+    };
+
     const handleLogin = () => {
       if (password.value.trim()) {
-        localStorage.setItem("apiKey", password.value); // API 키 저장
-        router.push("/"); // 로그인 성공 후 홈 페이지로 이동
+        localStorage.setItem("apiKey", password.value);
+        alert("Login successful");
+        router.push("/"); // 로그인 성공 후 홈페이지로 이동
       } else {
         errorMessage.value = "API key is required!";
       }
     };
 
+    const handleSignUp = () => {
+      if (password.value !== confirmPassword.value) {
+        errorMessage.value = "Passwords do not match!";
+        return;
+      }
+      localStorage.setItem(
+          "user",
+          JSON.stringify({ email: email.value, password: password.value })
+      );
+      alert("Sign up successful");
+      toggleCard("signin");
+    };
+
     return {
+      isSignUp,
       username,
       password,
       email,
       confirmPassword,
       errorMessage,
+      toggleCard,
       handleLogin,
+      handleSignUp,
     };
   },
 });
 </script>
 
-
-
-
-
-
 <style scoped>
-/* 카드 높이 및 위치 조정 */
 .translate-y-minus-30 {
   transform: translateY(-30px);
 }
