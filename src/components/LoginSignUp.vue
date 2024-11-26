@@ -150,7 +150,7 @@ export default defineComponent({
         const user = JSON.parse(storedUser);
         if (user.email === username.value && user.password === password.value) {
           errorMessage.value = ""; // 에러 메시지 초기화
-          router.push("/home"); // 로그인 성공 후 홈 페이지로 이동
+          router.push("/"); // 로그인 성공 후 홈 페이지로 이동
         } else {
           errorMessage.value = "Incorrect username or password.";
         }

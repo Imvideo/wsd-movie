@@ -9,7 +9,7 @@ const routes = [
         component: LoginSignUp,
     },
     {
-        path: "/home", // 홈 페이지
+        path: "/", // 홈 페이지
         name: "HomePage",
         component: HomePage,
     },
