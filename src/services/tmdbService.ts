@@ -2,13 +2,16 @@ import axios from "axios";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 
-// 인기 영화 가져오기
-export const fetchPopularMovies = async (apiKey: string) => {
+// 인기 영화 가져오기 (페이지 번호를 선택적으로 받음)
+export const fetchPopularMovies = async (
+    apiKey: string,
+    page = 1 // 기본값으로 페이지 1 설정
+) => {
     const response = await axios.get(`${BASE_URL}/movie/popular`, {
         params: {
             api_key: apiKey,
             language: "ko-KR",
-            page: 1,
+            page: page, // 페이지 번호 전달
         },
     });
     return response.data.results;
