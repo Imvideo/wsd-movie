@@ -1,32 +1,27 @@
 <template>
   <div class="min-h-screen bg-gray-900 text-white">
-    <!-- Header -->
-    <header class="bg-black p-4 sticky top-0 z-50">
-      <div class="flex justify-between items-center">
-        <h1 class="text-lg font-bold">대세 콘텐츠</h1>
-        <div class="flex space-x-4">
-          <!-- Table View 버튼 (아이콘) -->
-          <button
-              @click="viewMode = 'table'"
-              :class="viewMode === 'table' ? 'bg-blue-500 text-white' : 'bg-gray-700'"
-              class="px-4 py-2 rounded-md flex items-center"
-          >
-            <font-awesome-icon icon="th-large" class="text-xl" />
-          </button>
-          <!-- Infinite Scroll 버튼 (아이콘) -->
-          <button
-              @click="viewMode = 'infinite'"
-              :class="viewMode === 'infinite' ? 'bg-blue-500 text-white' : 'bg-gray-700'"
-              class="px-4 py-2 rounded-md flex items-center"
-          >
-            <font-awesome-icon icon="arrows-alt-v" class="text-xl" />
-          </button>
-        </div>
-      </div>
-    </header>
 
     <!-- Main Content -->
     <div class="p-4">
+      <div class="flex justify-end mb-4 space-x-4">
+        <!-- Table View 버튼 (아이콘) -->
+        <button
+            @click="viewMode = 'table'"
+            :class="viewMode === 'table' ? 'bg-blue-500 text-white' : 'bg-gray-700'"
+            class="px-4 py-2 rounded-md flex items-center"
+        >
+          <font-awesome-icon icon="th-large" class="text-xl" />
+        </button>
+        <!-- Infinite Scroll 버튼 (아이콘) -->
+        <button
+            @click="viewMode = 'infinite'"
+            :class="viewMode === 'infinite' ? 'bg-blue-500 text-white' : 'bg-gray-700'"
+            class="px-4 py-2 rounded-md flex items-center"
+        >
+          <font-awesome-icon icon="arrows-alt-v" class="text-xl" />
+        </button>
+      </div>
+
       <div v-if="viewMode === 'table'">
         <!-- Table View -->
         <div class="grid grid-cols-4 gap-4">
@@ -87,7 +82,7 @@
       </div>
     </div>
 
-    <!-- Top Button (텍스트 추가) -->
+    <!-- Top Button -->
     <button
         @click="scrollToTop"
         class="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg flex items-center"
@@ -99,17 +94,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, onUnmounted } from "vue";
 import { fetchPopularMovies } from "@/services/tmdbService";
 
 export default defineComponent({
   name: "PopularPage",
+  components: {
+  },
   setup() {
     const viewMode = ref("table"); // "table" or "infinite"
     const movies = ref<any[]>([]);
     const currentMovies = ref<any[]>([]);
     const currentPage = ref(1);
-    const totalPages = ref(1);
+    const totalPages = ref(10); // Example total pages
     const loading = ref(false);
 
     const apiKey = localStorage.getItem("apiKey");
@@ -147,6 +144,7 @@ export default defineComponent({
 
     const handleScroll = () => {
       if (viewMode.value !== "infinite") return;
+
       const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
       if (scrollTop + clientHeight >= scrollHeight - 10 && !loading.value) {
         changePage(currentPage.value + 1);
@@ -160,6 +158,10 @@ export default defineComponent({
     onMounted(() => {
       loadMovies(currentPage.value);
       window.addEventListener("scroll", handleScroll);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener("scroll", handleScroll);
     });
 
     return {
