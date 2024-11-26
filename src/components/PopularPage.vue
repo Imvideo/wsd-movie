@@ -4,20 +4,22 @@
     <header class="bg-black p-4 sticky top-0 z-10">
       <div class="flex justify-between items-center">
         <h1 class="text-lg font-bold">대세 콘텐츠</h1>
-        <div class="space-x-4">
+        <div class="flex space-x-4">
+          <!-- Table View 버튼 (아이콘) -->
           <button
               @click="viewMode = 'table'"
               :class="viewMode === 'table' ? 'bg-blue-500 text-white' : 'bg-gray-700'"
-              class="px-4 py-2 rounded-md"
+              class="px-4 py-2 rounded-md flex items-center"
           >
-            Table View
+            <font-awesome-icon icon="th-large" class="text-xl" />
           </button>
+          <!-- Infinite Scroll 버튼 (아이콘) -->
           <button
               @click="viewMode = 'infinite'"
               :class="viewMode === 'infinite' ? 'bg-blue-500 text-white' : 'bg-gray-700'"
-              class="px-4 py-2 rounded-md"
+              class="px-4 py-2 rounded-md flex items-center"
           >
-            Infinite Scroll
+            <font-awesome-icon icon="arrows-alt-v" class="text-xl" />
           </button>
         </div>
       </div>
@@ -48,6 +50,7 @@
               :disabled="currentPage === 1"
               class="px-4 py-2 bg-gray-700 rounded-md mr-2 disabled:opacity-50"
           >
+            <font-awesome-icon icon="arrow-left" class="mr-1" />
             이전
           </button>
           <span>{{ currentPage }} / {{ totalPages }}</span>
@@ -57,6 +60,7 @@
               class="px-4 py-2 bg-gray-700 rounded-md ml-2 disabled:opacity-50"
           >
             다음
+            <font-awesome-icon icon="arrow-right" class="ml-1" />
           </button>
         </div>
       </div>
@@ -83,11 +87,12 @@
       </div>
     </div>
 
-    <!-- Top Button -->
+    <!-- Top Button (텍스트 추가) -->
     <button
         @click="scrollToTop"
-        class="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg"
+        class="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-full shadow-lg flex items-center"
     >
+      <font-awesome-icon icon="arrow-up" class="mr-2" />
       Top
     </button>
   </div>
@@ -101,7 +106,7 @@ export default defineComponent({
   name: "PopularPage",
   setup() {
     const viewMode = ref("table"); // "table" or "infinite"
-    const movies = ref<any[]>([]); // 빈 배열 타입 명시
+    const movies = ref<any[]>([]);
     const currentMovies = ref<any[]>([]);
     const currentPage = ref(1);
     const totalPages = ref(1);
@@ -125,7 +130,7 @@ export default defineComponent({
         } else {
           currentMovies.value = response;
         }
-        totalPages.value = 10; // 동적으로 설정 가능
+        totalPages.value = 10; // TMDB 기준으로 total_pages 사용 가능
       } catch (error) {
         console.error("Error fetching movies:", error);
       } finally {
@@ -141,10 +146,10 @@ export default defineComponent({
     };
 
     const handleScroll = () => {
-      if (viewMode.value !== "infinite" || loading.value) return;
+      if (viewMode.value !== "infinite") return;
       const { scrollTop, clientHeight, scrollHeight } =
           document.documentElement;
-      if (scrollTop + clientHeight >= scrollHeight - 10) {
+      if (scrollTop + clientHeight >= scrollHeight - 10 && !loading.value) {
         changePage(currentPage.value + 1);
       }
     };
