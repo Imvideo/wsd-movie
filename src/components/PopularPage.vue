@@ -1,12 +1,16 @@
 <template>
   <div class="min-h-screen bg-gray-900 text-white">
+    <!-- 로딩 화면 -->
+    <div v-if="loading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <p class="text-white text-xl font-bold">Loading...</p>
+    </div>
 
     <!-- Main Content -->
-    <div class="p-4">
+    <div class="p-4" v-else>
       <div class="flex justify-end mb-4 space-x-4">
         <!-- Table View 버튼 (아이콘) -->
         <button
-            @click="viewMode = 'table'"
+            @click="setViewMode('table')"
             :class="viewMode === 'table' ? 'bg-blue-500 text-white' : 'bg-gray-700'"
             class="px-4 py-2 rounded-md flex items-center"
         >
@@ -14,7 +18,7 @@
         </button>
         <!-- Infinite Scroll 버튼 (아이콘) -->
         <button
-            @click="viewMode = 'infinite'"
+            @click="setViewMode('infinite')"
             :class="viewMode === 'infinite' ? 'bg-blue-500 text-white' : 'bg-gray-700'"
             class="px-4 py-2 rounded-md flex items-center"
         >
@@ -76,9 +80,6 @@
             <p class="mt-2 text-center text-sm">{{ movie.title }}</p>
           </div>
         </div>
-        <div v-if="loading" class="text-center mt-4">
-          <p>Loading...</p>
-        </div>
       </div>
     </div>
 
@@ -99,8 +100,6 @@ import { fetchPopularMovies } from "@/services/tmdbService";
 
 export default defineComponent({
   name: "PopularPage",
-  components: {
-  },
   setup() {
     const viewMode = ref("table"); // "table" or "infinite"
     const movies = ref<any[]>([]);
@@ -111,8 +110,7 @@ export default defineComponent({
 
     const apiKey = localStorage.getItem("apiKey");
 
-    const getImageUrl = (path: string) =>
-        `https://image.tmdb.org/t/p/w500${path}`;
+    const getImageUrl = (path: string) => `https://image.tmdb.org/t/p/w500${path}`;
 
     const loadMovies = async (page: number) => {
       if (!apiKey) {
@@ -147,7 +145,17 @@ export default defineComponent({
 
       const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
       if (scrollTop + clientHeight >= scrollHeight - 10 && !loading.value) {
-        changePage(currentPage.value + 1);
+        if (currentPage.value < totalPages.value) {
+          currentPage.value++;
+          loadMovies(currentPage.value);
+        }
+      }
+    };
+
+    const setViewMode = (mode: string) => {
+      viewMode.value = mode;
+      if (mode === "infinite" && movies.value.length === 0) {
+        loadMovies(currentPage.value);
       }
     };
 
@@ -173,6 +181,7 @@ export default defineComponent({
       loading,
       getImageUrl,
       changePage,
+      setViewMode,
       scrollToTop,
     };
   },
