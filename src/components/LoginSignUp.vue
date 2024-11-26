@@ -30,7 +30,7 @@
               <input
                   v-model="password"
                   type="password"
-                  placeholder="Password"
+                  placeholder="API Key (as password)"
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   required
               />
@@ -90,14 +90,14 @@
               <input
                   v-model="password"
                   type="password"
-                  placeholder="Password"
+                  placeholder="API Key (as password)"
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   required
               />
               <input
                   v-model="confirmPassword"
                   type="password"
-                  placeholder="Confirm Password"
+                  placeholder="Confirm API Key"
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   required
               />
@@ -137,25 +137,19 @@ import { useRouter } from "vue-router";
 export default defineComponent({
   name: "LoginSignUp",
   setup() {
-    const router = useRouter(); // Vue Router 객체
+    const router = useRouter();
     const username = ref("");
-    const password = ref("");
+    const password = ref(""); // TMDB API 키로 사용
     const email = ref("");
     const confirmPassword = ref("");
     const errorMessage = ref("");
 
     const handleLogin = () => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        if (user.email === username.value && user.password === password.value) {
-          errorMessage.value = ""; // 에러 메시지 초기화
-          router.push("/"); // 로그인 성공 후 홈 페이지로 이동
-        } else {
-          errorMessage.value = "Incorrect username or password.";
-        }
+      if (password.value.trim()) {
+        localStorage.setItem("apiKey", password.value); // API 키 저장
+        router.push("/"); // 로그인 성공 후 홈 페이지로 이동
       } else {
-        errorMessage.value = "No user found. Please sign up first.";
+        errorMessage.value = "API key is required!";
       }
     };
 
@@ -170,6 +164,8 @@ export default defineComponent({
   },
 });
 </script>
+
+
 
 
 

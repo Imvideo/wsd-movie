@@ -28,11 +28,17 @@ import { fetchPopularMovies } from "@/services/tmdbService";
 
 export default defineComponent({
   name: "MovieList",
-  setup() {
+  props: {
+    apiKey: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
     const movies = ref<any[]>([]);
 
     onMounted(async () => {
-      movies.value = await fetchPopularMovies();
+      movies.value = await fetchPopularMovies(props.apiKey);
     });
 
     return {
