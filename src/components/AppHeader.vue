@@ -1,9 +1,8 @@
 <template>
   <header class="bg-black text-white flex items-center justify-between px-4 py-2">
     <!-- 로고 -->
-    <div class="flex items-center">
+    <div class="flex items-center cursor-pointer" @click="redirectToHome">
       <font-awesome-icon icon="film" class="text-red-500 h-6 w-6 mr-2" />
-      <span class="text-lg font-bold">MovieApp</span>
     </div>
 
     <!-- 네비게이션 -->
@@ -32,12 +31,17 @@ export default defineComponent({
   setup() {
     const router = useRouter();
 
+    // 홈페이지로 리다이렉트
+    const redirectToHome = () => {
+      router.push("/");
+    };
+
     const handleLogout = () => {
       localStorage.removeItem("apiKey");
       router.push("/signin");
     };
 
-    return { handleLogout };
+    return { redirectToHome, handleLogout };
   },
 });
 </script>
