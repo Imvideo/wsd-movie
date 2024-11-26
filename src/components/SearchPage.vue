@@ -1,9 +1,6 @@
 <template>
   <div class="min-h-screen bg-gray-900 text-white">
     <!-- Header -->
-    <header class="bg-black p-4 sticky top-0 z-10">
-      <h1 class="text-xl font-bold">찾아보기</h1>
-    </header>
 
     <!-- Filters Section -->
     <div class="p-4 flex flex-wrap gap-4 items-center">
