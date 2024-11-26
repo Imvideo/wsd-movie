@@ -1,6 +1,5 @@
 <template>
   <div class="bg-gray-900 text-white min-h-screen">
-    <AppHeader />
     <AppBanner :apiKey="apiKey" />
     <section class="p-6">
       <MovieSlider :title="'인기 영화'" :fetchType="'popular'" :apiKey="apiKey" />
@@ -12,14 +11,13 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
-import AppHeader from "@/components/AppHeader.vue";
 import AppBanner from "@/components/AppBanner.vue";
 import MovieSlider from "@/components/MovieSlider.vue";
 
 export default defineComponent({
   name: "HomePage",
   components: {
-    AppHeader,
+
     AppBanner,
     MovieSlider,
   },
