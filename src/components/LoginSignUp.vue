@@ -101,11 +101,21 @@
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   required
               />
+              <!-- Terms & Conditions 체크박스 -->
+              <label class="flex items-center gap-2">
+                <input
+                    type="checkbox"
+                    v-model="termsAccepted"
+                    class="form-checkbox text-blue-500"
+                />
+                <span>I have read Terms and Conditions</span>
+              </label>
             </form>
           </div>
           <button
               v-if="isSignUp"
-              class="mt-6 w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+              :disabled="!termsAccepted"
+              class="mt-6 w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               @click.prevent="handleSignUp"
           >
             SIGN UP
@@ -143,6 +153,7 @@ export default defineComponent({
     const password = ref("");
     const email = ref("");
     const confirmPassword = ref("");
+    const termsAccepted = ref(false);
     const errorMessage = ref("");
 
     const resetFields = () => {
@@ -150,6 +161,7 @@ export default defineComponent({
       password.value = "";
       email.value = "";
       confirmPassword.value = "";
+      termsAccepted.value = false;
       errorMessage.value = "";
     };
 
@@ -185,6 +197,7 @@ export default defineComponent({
       password,
       email,
       confirmPassword,
+      termsAccepted,
       errorMessage,
       toggleCard,
       handleLogin,
@@ -193,7 +206,6 @@ export default defineComponent({
   },
 });
 </script>
-
 
 <style scoped>
 .translate-y-minus-30 {
