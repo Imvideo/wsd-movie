@@ -171,12 +171,24 @@ export default defineComponent({
     };
 
     const handleLogin = () => {
-      if (password.value.trim()) {
-        localStorage.setItem("apiKey", password.value);
-        router.push("/"); // 로그인 성공 후 홈페이지로 이동
-      } else {
-        errorMessage.value = "API key is required!";
+      const storedUser = localStorage.getItem("user");
+      if (!storedUser) {
+        errorMessage.value = "Account does not exist. Please sign up first!";
+        return;
       }
+
+      const parsedUser = JSON.parse(storedUser);
+      if (
+          username.value !== parsedUser.email ||
+          password.value !== parsedUser.password
+      ) {
+        errorMessage.value = "Invalid email or password!";
+        return;
+      }
+
+      // 로그인 성공
+      localStorage.setItem("apiKey", password.value);
+      router.push("/"); // 로그인 성공 후 홈페이지로 이동
     };
 
     const handleSignUp = () => {
@@ -184,10 +196,14 @@ export default defineComponent({
         errorMessage.value = "Passwords do not match!";
         return;
       }
+
+      // 사용자 정보를 로컬 스토리지에 저장
       localStorage.setItem(
           "user",
           JSON.stringify({ email: email.value, password: password.value })
       );
+
+      // 회원가입 성공 후 로그인 화면으로 이동
       toggleCard("signin");
     };
 
@@ -206,6 +222,7 @@ export default defineComponent({
   },
 });
 </script>
+
 
 <style scoped>
 .translate-y-minus-30 {
