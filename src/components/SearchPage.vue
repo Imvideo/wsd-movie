@@ -1,7 +1,5 @@
 <template>
   <div class="min-h-screen bg-gray-900 text-white">
-    <!-- Header -->
-
     <!-- Filters Section -->
     <div class="p-4 flex flex-wrap gap-4 items-center">
       <label>
@@ -58,7 +56,8 @@
           <div
               v-for="movie in movies"
               :key="movie.id"
-              class="bg-gray-800 rounded overflow-hidden shadow-lg"
+              class="relative bg-gray-800 rounded overflow-hidden shadow-lg cursor-pointer"
+              @click="toggleWishlist(movie)"
           >
             <img
                 :src="getImageUrl(movie.poster_path)"
@@ -69,6 +68,13 @@
               <h3 class="text-lg font-bold truncate">{{ movie.title }}</h3>
               <p class="text-sm text-gray-400">평점: {{ movie.vote_average }}</p>
             </div>
+            <!-- 찜 상태 표시 -->
+            <span
+                v-if="movie.isWishlist"
+                class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 text-xs"
+            >
+              ❤️
+            </span>
           </div>
         </div>
         <!-- Pagination -->
@@ -114,7 +120,33 @@ export default defineComponent({
     const totalPages = ref(1);
 
     const getImageUrl = (path: string) =>
-        `https://image.tmdb.org/t/p/w500${path}`;
+        path ? `https://image.tmdb.org/t/p/w500${path}` : "/placeholder.jpg";
+
+    const loadWishlistStatus = () => {
+      const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+      movies.value = movies.value.map((movie) => ({
+        ...movie,
+        isWishlist: wishlist.some((item: any) => item.id === movie.id),
+      }));
+    };
+
+    const toggleWishlist = (movie: any) => {
+      const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+
+      if (movie.isWishlist) {
+        const updatedWishlist = wishlist.filter((item: any) => item.id !== movie.id);
+        localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+      } else {
+        wishlist.push({
+          id: movie.id,
+          title: movie.title,
+          poster_path: movie.poster_path,
+        });
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+      }
+
+      loadWishlistStatus();
+    };
 
     const loadMovies = async () => {
       if (!apiKey) {
@@ -123,12 +155,6 @@ export default defineComponent({
       }
       loading.value = true;
       try {
-        console.log(
-            "Loading movies with filters:",
-            selectedGenre.value,
-            selectedRating.value,
-            selectedSort.value
-        );
         const response = await fetchFilteredMovies({
           apiKey,
           page: currentPage.value,
@@ -136,7 +162,11 @@ export default defineComponent({
           rating: selectedRating.value,
           sort: selectedSort.value,
         });
-        movies.value = response.results;
+        movies.value = response.results.map((movie: any) => ({
+          ...movie,
+          isWishlist: false, // 초기값
+        }));
+        loadWishlistStatus(); // 찜 상태 반영
         totalPages.value = response.total_pages;
       } catch (error) {
         console.error("Error fetching movies:", error);
@@ -173,14 +203,13 @@ export default defineComponent({
       }
     };
 
-    // Watchers for Filters
     watch(
         [selectedGenre, selectedRating, selectedSort],
         () => {
           currentPage.value = 1; // 필터 변경 시 페이지 초기화
           loadMovies(); // 필터 변경 즉시 검색
         },
-        { immediate: true } // 컴포넌트 로드 시 초기 실행
+        { immediate: true }
     );
 
     onMounted(() => {
@@ -200,7 +229,17 @@ export default defineComponent({
       resetFilters,
       changePage,
       getImageUrl,
+      toggleWishlist,
     };
   },
 });
 </script>
+
+<style scoped>
+button {
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #444;
+}
+</style>
