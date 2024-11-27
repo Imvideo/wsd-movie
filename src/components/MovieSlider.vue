@@ -10,7 +10,8 @@
         <div
             v-for="movie in movies"
             :key="movie.id"
-            class="w-40 flex-shrink-0 mx-2"
+            class="relative w-40 flex-shrink-0 mx-2 cursor-pointer"
+            @click="toggleWishlist(movie)"
         >
           <img
               :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
@@ -18,6 +19,13 @@
               class="rounded shadow"
           />
           <p class="mt-2 text-sm text-center">{{ movie.title }}</p>
+          <!-- 찜 상태 표시 -->
+          <span
+              v-if="movie.isWishlist"
+              class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 text-xs"
+          >
+            ❤️
+          </span>
         </div>
       </div>
     </div>
@@ -68,6 +76,36 @@ export default defineComponent({
     const sliderWidth = 640; // 슬라이더 한 화면의 너비
     const itemWidth = 160; // 아이템 한 개의 너비 (마진 포함)
 
+    // 찜 상태 확인
+    const loadWishlistStatus = () => {
+      const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+      movies.value = movies.value.map((movie) => ({
+        ...movie,
+        isWishlist: wishlist.some((item: any) => item.id === movie.id),
+      }));
+    };
+
+    const toggleWishlist = (movie: any) => {
+      const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+
+      if (movie.isWishlist) {
+        // Remove from wishlist
+        const updatedWishlist = wishlist.filter((item: any) => item.id !== movie.id);
+        localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+      } else {
+        // Add to wishlist
+        wishlist.push({
+          id: movie.id,
+          title: movie.title,
+          poster_path: movie.poster_path,
+        });
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+      }
+
+      // 즉시 반영
+      loadWishlistStatus();
+    };
+
     const slideLeft = () => {
       currentOffset.value = Math.max(0, currentOffset.value - itemWidth);
     };
@@ -81,36 +119,39 @@ export default defineComponent({
     };
 
     onMounted(async () => {
+      let fetchedMovies: any[] = [];
       if (props.fetchType === "discover" && props.genreId) {
-        movies.value = await fetchMoviesByGenre(props.genreId, props.apiKey);
+        fetchedMovies = await fetchMoviesByGenre(props.genreId, props.apiKey);
       } else {
-        movies.value = await fetchMoviesByType(props.fetchType, props.apiKey);
+        fetchedMovies = await fetchMoviesByType(props.fetchType, props.apiKey);
       }
+
+      // 초기 찜 상태 로드
+      movies.value = fetchedMovies.map((movie: any) => ({
+        ...movie,
+        isWishlist: false, // 초기값
+      }));
+
+      loadWishlistStatus();
     });
+
 
     return {
       movies,
       currentOffset,
       slideLeft,
       slideRight,
+      toggleWishlist,
     };
   },
 });
 </script>
 
-
-<!--<style scoped>-->
-<!--.overflow-x-auto {-->
-<!--  display: flex;-->
-<!--  overflow-x: auto;-->
-<!--  scroll-behavior: smooth;-->
-<!--}-->
-
-<!--.overflow-x-auto::-webkit-scrollbar {-->
-<!--  display: none; /* 스크롤바 숨기기 */-->
-<!--}-->
-
-<!--.space-x-4 > * + * {-->
-<!--  margin-left: 1rem;-->
-<!--}-->
-<!--</style>-->
+<style scoped>
+button {
+  transition: background-color 0.3s;
+}
+button:hover {
+  background-color: #444;
+}
+</style>
