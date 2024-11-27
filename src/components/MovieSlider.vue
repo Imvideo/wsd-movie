@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted, onUnmounted } from "vue";
 import { fetchMoviesByType, fetchMoviesByGenre } from "@/services/tmdbService";
 
 export default defineComponent({
@@ -76,7 +76,6 @@ export default defineComponent({
     const sliderWidth = 640; // 슬라이더 한 화면의 너비
     const itemWidth = 160; // 아이템 한 개의 너비 (마진 포함)
 
-    // 찜 상태 확인
     const loadWishlistStatus = () => {
       const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
       movies.value = movies.value.map((movie) => ({
@@ -89,11 +88,9 @@ export default defineComponent({
       const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
 
       if (movie.isWishlist) {
-        // Remove from wishlist
         const updatedWishlist = wishlist.filter((item: any) => item.id !== movie.id);
         localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
       } else {
-        // Add to wishlist
         wishlist.push({
           id: movie.id,
           title: movie.title,
@@ -102,8 +99,9 @@ export default defineComponent({
         localStorage.setItem("wishlist", JSON.stringify(wishlist));
       }
 
-      // 즉시 반영
+      // 상태 반영 및 이벤트 발생
       loadWishlistStatus();
+      window.dispatchEvent(new Event("wishlistUpdated"));
     };
 
     const slideLeft = () => {
@@ -118,6 +116,10 @@ export default defineComponent({
       currentOffset.value = Math.min(maxOffset, currentOffset.value + itemWidth);
     };
 
+    const syncWishlist = () => {
+      loadWishlistStatus();
+    };
+
     onMounted(async () => {
       let fetchedMovies: any[] = [];
       if (props.fetchType === "discover" && props.genreId) {
@@ -126,15 +128,21 @@ export default defineComponent({
         fetchedMovies = await fetchMoviesByType(props.fetchType, props.apiKey);
       }
 
-      // 초기 찜 상태 로드
       movies.value = fetchedMovies.map((movie: any) => ({
         ...movie,
-        isWishlist: false, // 초기값
+        isWishlist: false,
       }));
 
       loadWishlistStatus();
+
+      // 이벤트 리스너 등록
+      window.addEventListener("wishlistUpdated", syncWishlist);
     });
 
+    onUnmounted(() => {
+      // 이벤트 리스너 제거
+      window.removeEventListener("wishlistUpdated", syncWishlist);
+    });
 
     return {
       movies,
