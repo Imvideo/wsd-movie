@@ -1,4 +1,4 @@
-![스크린샷 2024-11-27 오후 8 12 59](https://github.com/user-attachments/assets/862183a4-f8d0-47b4-8d8d-83829c33e0b1)# jysmovie
+# jysmovie
 
 jysmovie는 사용자 친화적인 UI를 통해 영화 데이터를 검색하고 관리할 수 있는 영화 추천 및 관리 웹 애플리케이션입니다. TMDB API를 사용하여 최신 영화 데이터를 제공합니다.
 ![스크린샷 2024-11-27 오후 8 13 27](https://github.com/user-attachments/assets/3db2999b-dea0-4d9f-8c6e-51c0e2044245)
