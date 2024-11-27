@@ -32,14 +32,23 @@
           <div
               v-for="movie in currentMovies"
               :key="movie.id"
-              class="bg-gray-800 p-2 rounded-md flex flex-col items-center"
+              @click="toggleWishlist(movie)"
+              class="relative bg-gray-800 p-2 rounded-md flex flex-col items-center cursor-pointer"
           >
             <img
                 :src="getImageUrl(movie.poster_path)"
                 :alt="movie.title"
                 class="w-full h-48 object-cover rounded-md"
+                @error="handleImageError"
             />
             <p class="mt-2 text-center text-sm">{{ movie.title }}</p>
+            <!-- 찜한 영화 표시 -->
+            <span
+                v-if="wishlist.some((item) => item.id === movie.id)"
+                class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 text-xs"
+            >
+              ❤️
+            </span>
           </div>
         </div>
         <!-- Pagination -->
@@ -70,14 +79,23 @@
           <div
               v-for="movie in movies"
               :key="movie.id"
-              class="bg-gray-800 p-2 rounded-md flex flex-col items-center"
+              @click="toggleWishlist(movie)"
+              class="relative bg-gray-800 p-2 rounded-md flex flex-col items-center cursor-pointer"
           >
             <img
                 :src="getImageUrl(movie.poster_path)"
                 :alt="movie.title"
                 class="w-full h-48 object-cover rounded-md"
+                @error="handleImageError"
             />
             <p class="mt-2 text-center text-sm">{{ movie.title }}</p>
+            <!-- 찜한 영화 표시 -->
+            <span
+                v-if="wishlist.some((item) => item.id === movie.id)"
+                class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 text-xs"
+            >
+              ❤️
+            </span>
           </div>
         </div>
       </div>
@@ -101,17 +119,24 @@ import { fetchPopularMovies } from "@/services/tmdbService";
 export default defineComponent({
   name: "PopularPage",
   setup() {
-    const viewMode = ref("table"); // "table" or "infinite"
+    const viewMode = ref("table");
     const movies = ref<any[]>([]);
     const currentMovies = ref<any[]>([]);
     const currentPage = ref(1);
-    const totalPages = ref(10); // Example total pages
+    const totalPages = ref(10);
     const loading = ref(false);
+
+    // Wishlist 상태 관리
+    const wishlist = ref<any[]>(JSON.parse(localStorage.getItem("wishlist") || "[]"));
 
     const apiKey = localStorage.getItem("apiKey");
 
     const getImageUrl = (path: string) =>
-        `https://image.tmdb.org/t/p/w500${path}`;
+        path ? `https://image.tmdb.org/t/p/w500${path}` : "/placeholder.jpg";
+
+    const handleImageError = (event: Event) => {
+      (event.target as HTMLImageElement).src = "/placeholder.jpg";
+    };
 
     const loadMovies = async (page: number) => {
       if (!apiKey) {
@@ -122,16 +147,26 @@ export default defineComponent({
       try {
         const response = await fetchPopularMovies(apiKey, page);
         if (viewMode.value === "infinite") {
-          movies.value = [...movies.value, ...response]; // 이전 데이터를 유지하며 새 데이터를 추가
+          movies.value = [...movies.value, ...response];
         } else {
           currentMovies.value = response;
         }
-        totalPages.value = 10; // Example total pages, set this based on actual API response
+        totalPages.value = 10;
       } catch (error) {
         console.error("Error fetching movies:", error);
       } finally {
         loading.value = false;
       }
+    };
+
+    const toggleWishlist = (movie: any) => {
+      const index = wishlist.value.findIndex((item) => item.id === movie.id);
+      if (index > -1) {
+        wishlist.value.splice(index, 1);
+      } else {
+        wishlist.value.push(movie);
+      }
+      localStorage.setItem("wishlist", JSON.stringify(wishlist.value));
     };
 
     const changePage = (page: number) => {
@@ -141,20 +176,22 @@ export default defineComponent({
       }
     };
 
+    const scrollToTop = () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
     const switchToTableView = async () => {
       viewMode.value = "table";
       currentPage.value = 1;
       currentMovies.value = [];
       await loadMovies(1);
-      scrollToTop();
     };
 
     const switchToInfiniteScroll = async () => {
       viewMode.value = "infinite";
       currentPage.value = 1;
-      movies.value = []; // 기존 데이터를 초기화
+      movies.value = [];
       await loadMovies(1);
-      scrollToTop();
     };
 
     const handleScroll = () => {
@@ -164,10 +201,6 @@ export default defineComponent({
       if (scrollTop + clientHeight >= scrollHeight - 10 && !loading.value) {
         changePage(currentPage.value + 1);
       }
-    };
-
-    const scrollToTop = () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     onMounted(() => {
@@ -186,11 +219,14 @@ export default defineComponent({
       currentPage,
       totalPages,
       loading,
+      wishlist,
       getImageUrl,
+      handleImageError,
+      toggleWishlist,
       changePage,
+      scrollToTop,
       switchToTableView,
       switchToInfiniteScroll,
-      scrollToTop,
     };
   },
 });
